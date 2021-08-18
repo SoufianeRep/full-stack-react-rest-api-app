@@ -16,13 +16,10 @@ export default class Data {
   }
 
   async getCourses() {
-    const courses = [];
     await this.api("get", "/courses")
       .then((response) => {
-        if (response.status === 200) {
-          response.data.forEach((x) => courses.push(x));
-          return courses;
-        }
+        console.log(response.data);
+        return response.data;
       })
       .catch((error) => {
         if (error.response.status === 401) {

@@ -5,7 +5,7 @@ export const Context = createContext();
 
 const data = new Data();
 export const Provider = ({ children }) => {
-  const [courses] = useState(data.getCourses());
+  const [courses, setCourses] = useState(data.getCourses());
 
   return <Context.Provider value={courses}>{children}</Context.Provider>;
 };
