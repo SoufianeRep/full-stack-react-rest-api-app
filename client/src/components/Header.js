@@ -5,13 +5,13 @@ const Header = () => {
     <header>
       <div class="wrap header--flex">
         <h1 class="header--logo">
-          <a href="index.html">Courses</a>
+          <a href="/">Courses</a>
         </h1>
         <nav>
           <ul class="header--signedin">
-            <li>Welcome, Joe Smith!</li>
+            <li>Welcome, XXXX</li>
             <li>
-              <a href="sign-out.html">Sign Out</a>
+              <a href="/">Sign Out</a>
             </li>
           </ul>
         </nav>

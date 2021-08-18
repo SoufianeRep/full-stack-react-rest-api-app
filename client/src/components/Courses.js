@@ -10,9 +10,9 @@ const Course = () => {
   return (
     <main>
       <div className="wrap main--grid">
-        <a className="course--module course--link" href="course-detail.html">
+        <a className="course--module course--link" href="/">
           <h2 className="course--label">Course</h2>
-          <h3 className="course--title">Build a Basic Bookcase</h3>
+          <h3 className="course--title">{"course Name"}</h3>
         </a>
         <a
           className="course--module course--add--module"

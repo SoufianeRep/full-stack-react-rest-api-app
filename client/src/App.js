@@ -10,7 +10,6 @@ const App = () => {
     <>
       <Header />
       <Course />
-      <p>Full Stack React / REST Api app</p>
     </>
   );
 };
