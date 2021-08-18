@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Context } from "../context/Context";
 
 const Course = () => {
-  const courses = useContext(Context);
+  const { courses } = useContext(Context);
 
   useEffect(() => {
     console.log(courses);

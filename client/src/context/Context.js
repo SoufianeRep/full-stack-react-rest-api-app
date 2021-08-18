@@ -3,8 +3,8 @@ import Data from "../data";
 
 export const Context = createContext();
 
-const data = new Data();
 export const Provider = ({ children }) => {
+  const data = new Data();
   const [courses, setCourses] = useState(data.getCourses());
 
   return <Context.Provider value={courses}>{children}</Context.Provider>;
