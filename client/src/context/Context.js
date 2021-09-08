@@ -1,24 +1,29 @@
-import { createContext, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { createContext, useState } from "react";
+import Cookies from "js-cookie";
 import Data from "../data";
 
 export const Context = createContext();
 
 export const Provider = ({ children }) => {
   const data = new Data();
-  const [cookie, setCookies, removeCookies] = useCookies();
+  const [authUser, setAuthUser] = useState(Cookies.get("authUser") || null);
+  const [values] = useState({
+    data,
+    authUser,
+    actions: { signIn, signOut },
+  });
 
   async function signIn(credentials) {
     return await data.getUser("/users", credentials).then((res) => {
-      setCookies("authUser", res.user.firstName);
-      return res;
+      setAuthUser(res.user.firstName);
+      Cookies.set("authUser", res.user.firstName);
+      return res.user;
     });
   }
   function signOut() {
-    removeCookies("authUser");
+    setAuthUser(null);
+    Cookies.remove("authUser");
   }
-
-  const [values] = useState({ data, cookie, actions: { signIn, signOut } });
 
   return <Context.Provider value={values}>{children}</Context.Provider>;
 };

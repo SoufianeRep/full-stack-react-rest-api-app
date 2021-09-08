@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../context/Context";
 
 const Header = () => {
-  const { cookie } = useContext(Context);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cookieExists] = useState(Object.keys(cookie).length);
-
-  useEffect(() => {
-    if (cookieExists) {
-      setIsLoggedIn(true);
-    }
-  }, [cookieExists]);
+  const { authUser } = useContext(Context);
 
   return (
     <header>
@@ -20,9 +12,9 @@ const Header = () => {
           <Link to="/">Courses</Link>
         </h1>
         <nav>
-          {isLoggedIn ? (
+          {authUser ? (
             <ul className="header--signedin">
-              <li>Welcome {cookie.authUser}!</li>
+              <li>Welcome {authUser}!</li>
               <li>
                 <Link to="/signout">Sign Out</Link>
               </li>
