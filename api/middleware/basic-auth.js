@@ -19,13 +19,13 @@ exports.authenticateUser = async (req, res, next) => {
         console.log('User Authentication successful');
         req.loggedUser = user;
       } else {
-        message = `Can't Authenticate the user: ${user.username}`;
+        message = [`Can't Authenticate the user: ${user.username}`];
       }
     } else {
-      message = `the user ${credentials.name} doesnt exist`;
+      message = [`the user ${credentials.name} doesnt exist`];
     }
   } else {
-    message = `No Auth Header found`;
+    message = [`No Auth Header found`];
   }
 
   if (message) {

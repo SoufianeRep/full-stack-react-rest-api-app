@@ -5,12 +5,26 @@ const { authenticateUser } = require('../middleware/basic-auth');
 const { User, Course } = require('../models');
 
 //===================================
-//COURSES ROUTES//
+//USERS ROUTES//
 //===================================
 // GET route that will return the currently authenticated user
 // along with a 200 HTTP status code.
+
+//TO DELETE  #########
+// router.get(
+//   '/allusers',
+//   asyncHandler(async (req, res) => {
+//     try {
+//       const users = await User.findAll();
+//       res.json({ users });
+//     } catch (error) {
+//       throw error;
+//     }
+//   })
+// );
+
 router.get(
-  '/api/users',
+  '/users',
   authenticateUser,
   asyncHandler(async (req, res, next) => {
     try {
@@ -27,19 +41,20 @@ router.get(
 // POST route that will create a new user, set the Location header to "/",
 // and return a 201 HTTP status code and no content.
 router.post(
-  '/api/users',
+  '/users',
   asyncHandler(async (req, res, next) => {
     try {
       await User.create(req.body);
       res.location('/');
       res.status(201).end();
     } catch (error) {
-      if (
-        error.name === 'SequelizeValidationError' ||
-        error.name === 'SequelizeUniqueConstraintError'
-      ) {
+      if (error.name === 'SequelizeValidationError') {
         const errors = error.errors.map((x) => x.message);
         res.status(400).json({ errors });
+      } else if (error.name === 'SequelizeUniqueConstraintError') {
+        res.status(400).json({
+          errors: ['An account with the same Email address already exists'],
+        });
       } else {
         throw error;
       }
@@ -65,7 +80,9 @@ router.get(
         },
       });
       res.json(courses);
-    } catch (error) {}
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
   })
 );
 
@@ -95,7 +112,7 @@ router.get(
   })
 );
 
-// Route to ass a course to the database
+// Route to add a course to the database
 router.post(
   '/courses',
   authenticateUser,

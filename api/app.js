@@ -23,15 +23,15 @@ app.use(express.json());
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
-// API router
-app.use('/api', api);
-
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the REST API project!',
   });
 });
+
+// API router
+app.use('/api', api);
 
 // send 404 if no other route matched
 app.use((req, res) => {
