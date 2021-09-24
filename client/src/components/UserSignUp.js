@@ -14,9 +14,19 @@ const UserSignUp = () => {
       ...values,
     };
 
-    context.data.createUser("/users", body).catch((error) => {
-      setErr(error.response.data.errors);
-    });
+    context.data
+      .createUser("/users", body)
+      .then(() => {
+        history.push("/");
+      })
+      .catch((error) => {
+        const { status } = error.response;
+        if (status === 400) {
+          setErr(error.response.data.errors);
+        } else {
+          history.push("/error");
+        }
+      });
   }
 
   const cancle = () => {

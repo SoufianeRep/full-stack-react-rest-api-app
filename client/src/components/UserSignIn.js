@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, Redirect } from "react-router";
 import { Context } from "../context/Context";
 import useForm from "../utils/useForm";
 
 const UserSignIn = () => {
-  const { actions } = useContext(Context);
+  const { actions, authorizedUser } = useContext(Context);
   const history = useHistory();
   const { values, handleChange, handleSubmit } = useForm(submit);
-  const [err, setErr] = useState([]);
+  const [err, setErr] = useState("");
 
   function submit() {
     const credentials = {
@@ -16,11 +16,17 @@ const UserSignIn = () => {
     };
     actions
       .signIn(credentials)
-      .then((res) => {
-        history.push("/");
+      .then(() => {
+        history.goBack();
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status === 401) {
+          setErr(
+            "The supplied user credentials are invalid. Please try again."
+          );
+        } else {
+          history.push("/error");
+        }
       });
   }
 
@@ -28,18 +34,16 @@ const UserSignIn = () => {
     history.push("/");
   };
 
-  return (
+  return authorizedUser ? (
+    <Redirect to="/" />
+  ) : (
     <div className="form--centered">
       <h2>Sign In</h2>
 
-      {err.length > 0 && (
+      {err && (
         <div className="validation--errors">
-          <h3>Validation Errors</h3>
-          <ul>
-            {err.map((x, i) => {
-              <li key={i}>{x}</li>;
-            })}
-          </ul>
+          <h3>Incorrect username or password</h3>
+          <ul>{err}</ul>
         </div>
       )}
 

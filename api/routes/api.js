@@ -10,19 +10,6 @@ const { User, Course } = require('../models');
 // GET route that will return the currently authenticated user
 // along with a 200 HTTP status code.
 
-//TO DELETE  #########
-// router.get(
-//   '/allusers',
-//   asyncHandler(async (req, res) => {
-//     try {
-//       const users = await User.findAll();
-//       res.json({ users });
-//     } catch (error) {
-//       throw error;
-//     }
-//   })
-// );
-
 router.get(
   '/users',
   authenticateUser,
@@ -33,7 +20,7 @@ router.get(
       });
       res.json({ user });
     } catch (error) {
-      throw error;
+      res.status(404);
     }
   })
 );

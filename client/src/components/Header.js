@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../context/Context";
 
 const Header = () => {
-  const { authUser } = useContext(Context);
+  const { authorizedUser } = useContext(Context);
 
   return (
     <header>
@@ -12,22 +12,26 @@ const Header = () => {
           <Link to="/">Courses</Link>
         </h1>
         <nav>
-          {authUser ? (
-            <ul className="header--signedin">
-              <li>Welcome {authUser}!</li>
-              <li>
-                <Link to="/signout">Sign Out</Link>
-              </li>
-            </ul>
+          {authorizedUser ? (
+            <>
+              <ul className="header--signedin">
+                <li>Welcome {authorizedUser}!</li>
+                <li>
+                  <Link to="/signout">Sign Out</Link>
+                </li>
+              </ul>
+            </>
           ) : (
-            <ul className="header--signedin">
-              <li>
-                <Link to="/signup">Sign Up</Link>
-              </li>
-              <li>
-                <Link to="/signin">Sign In</Link>
-              </li>
-            </ul>
+            <>
+              <ul className="header--signedin">
+                <li>
+                  <Link to="/signup">Sign Up</Link>
+                </li>
+                <li>
+                  <Link to="/signin">Sign In</Link>
+                </li>
+              </ul>
+            </>
           )}
         </nav>
       </div>

@@ -1,27 +1,33 @@
+//eslint-disable-next-line
 import React, { useContext, useState } from "react";
 import useForm from "../utils/useForm";
 import { Context } from "../context/Context";
 import { useHistory } from "react-router";
+// import Cookies from "js-cookie";
 
 const CreateCourse = () => {
   const { values, handleChange, handleSubmit } = useForm(submit);
   const [err, setErr] = useState([]);
   const history = useHistory();
-  const context = useContext(Context);
+  let { data, credentials } = useContext(Context);
 
   function submit() {
     //Post request's body
     const body = {
       ...values,
-      userId: 1, //to change later
+      userId: localStorage.userId,
     };
-    context.data
-      .createCourse("/courses", body)
-      .then((res) => {
+    data
+      .createCourse("/courses", body, credentials)
+      .then(() => {
         history.push("/");
       })
       .catch((error) => {
-        setErr(error.response.data.errors);
+        if (error.response.status === 400) {
+          setErr(error.response.data.errors);
+        } else {
+          history.push("/error");
+        }
       });
   }
 
@@ -55,8 +61,6 @@ const CreateCourse = () => {
               value={values.title || ""}
               onChange={handleChange}
             />
-
-            <p>By Joe Smith</p>
 
             <label htmlFor="courseDescription">Course Description</label>
             <textarea

@@ -4,18 +4,15 @@ import { BrowserRouter } from "react-router-dom";
 import "../src/styles/reset.css";
 import "../src/styles/global.css";
 import { Provider } from "./context/Context";
-import { CookiesProvider } from "react-cookie";
 import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <CookiesProvider>
-      <Provider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
-    </CookiesProvider>
+    <Provider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

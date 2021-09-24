@@ -16,7 +16,6 @@ export default class Data {
       baseURL: config.baseApiUrl,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        Authorization: "basic am9lQHNtaXRoLmNvbTpqb2VwYXNzd29yZA==",
       },
       withCredentials: false,
     };
@@ -35,27 +34,21 @@ export default class Data {
   }
 
   async getCourse(url) {
-    return await this.api(url)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          return null;
-        } else {
-          throw new Error(error.message);
-        }
-      });
-  }
-
-  async updateCourse(url, data) {
-    return await this.api(url, "put", data).then((response) => {
+    return await this.api(url).then((response) => {
       return response.data;
     });
   }
 
-  async deleteCourse(url) {
-    return await this.api(url, "delete")
+  async updateCourse(url, data, credentials) {
+    return await this.api(url, "put", data, true, credentials).then(
+      (response) => {
+        return response.data;
+      }
+    );
+  }
+
+  async deleteCourse(url, credentials) {
+    return await this.api(url, "delete", null, true, credentials)
       .then((response) => {
         return response.data;
       })
@@ -64,10 +57,12 @@ export default class Data {
       });
   }
 
-  async createCourse(url, data) {
-    return await this.api(url, "post", data).then((response) => {
-      return response.status;
-    });
+  async createCourse(url, data, credentials) {
+    return await this.api(url, "post", data, true, credentials).then(
+      (response) => {
+        return response.status;
+      }
+    );
   }
 
   async createUser(url, data) {
@@ -77,10 +72,13 @@ export default class Data {
   }
 
   async getUser(url, credentials) {
-    return await this.api(url, "get", null, true, credentials).then(
-      (response) => {
-        return response.data;
-      }
-    );
+    const response = await this.api(url, "get", null, true, credentials);
+    if (response.status === 200) {
+      return response.data;
+    } else if (response.status === 401) {
+      return null;
+    } else {
+      throw new Error();
+    }
   }
 }

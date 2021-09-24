@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Context } from "../context/Context";
 
 export default function Courses() {
@@ -9,22 +10,23 @@ export default function Courses() {
     context.data.getCourse("/courses").then((courses) => {
       setCourses(courses);
     });
-  }, [context]);
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="wrap main--grid">
       {courses.map((course) => (
-        <a
+        <Link
+          to={`/courses/${course.id}`}
           key={course.id}
           className="course--module course--link"
-          href={`/courses/${course.id}`}
         >
           <h2 className="course--label">Course</h2>
           <h3 className="course--title">{course.title}</h3>
-        </a>
+        </Link>
       ))}
 
-      <a className="course--module course--add--module" href="/courses/create">
+      <Link className="course--module course--add--module" to="/courses/create">
         <span className="course--add--title">
           <svg
             version="1.1"
@@ -38,7 +40,7 @@ export default function Courses() {
           </svg>
           New Course
         </span>
-      </a>
+      </Link>
     </div>
   );
 }

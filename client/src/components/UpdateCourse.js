@@ -4,31 +4,47 @@ import { useParams, useHistory } from "react-router-dom";
 import useForm from "../utils/useForm";
 
 export default function UpdateCourse() {
-  const context = useContext(Context);
+  const { data, credentials } = useContext(Context);
   const history = useHistory();
   const { id } = useParams();
   const { values, setValues, handleChange, handleSubmit } = useForm(submit);
+  const [course, setCourse] = useState({});
   const [err, setErr] = useState([]);
 
   useEffect(() => {
-    context.data.getCourse("/courses/" + id).then((course) => {
-      console.log(course);
-      setValues(course);
-    });
-  }, []);
+    data
+      .getCourse("/courses/" + id)
+      .then((course) => {
+        setValues(course);
+        setCourse(course);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          history.push("/notfound");
+        }
+      });
+    //eslint-disable-next-line
+  }, [data]);
 
   function submit() {
     const body = {
       ...values,
     };
 
-    context.data
-      .updateCourse("/courses/" + id, body)
+    data
+      .updateCourse("/courses/" + id, body, credentials)
       .then(() => {
         history.push("/courses/" + id);
       })
       .catch((error) => {
-        setErr(error.response.data.errors);
+        const { status } = error.response;
+        if (status === 400) {
+          setErr(error.response.data.errors);
+        } else if (status === 403) {
+          history.push("/forbidden");
+        } else {
+          history.push("/error");
+        }
       });
   }
 
@@ -62,7 +78,11 @@ export default function UpdateCourse() {
               value={values.title || ""}
               onChange={handleChange}
             />
-            <p>##Name of Owner##</p>
+            <p>
+              {" "}
+              {course.user &&
+                `${course.user.firstName} ${course.user.lastName}`}
+            </p>
 
             <label htmlFor="courseDescription">Course Description</label>
             <textarea
