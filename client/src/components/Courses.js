@@ -1,17 +1,24 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Context } from "../context/Context";
 
 export default function Courses() {
-  const context = useContext(Context);
+  const { data } = useContext(Context);
   const [courses, setCourses] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
-    context.data.getCourse("/courses").then((courses) => {
-      setCourses(courses);
-    });
-    //eslint-disable-next-line
-  }, []);
+    data
+      .getCourse("/courses")
+      .then((courses) => {
+        setCourses(courses);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          history.push("/error");
+        }
+      });
+  }, [data, history]);
 
   return (
     <div className="wrap main--grid">

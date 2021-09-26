@@ -9,7 +9,16 @@ export const Provider = ({ children }) => {
   const [authorizedUser, setAuthorizedUser] = useState(
     localStorage.getItem("authUser") || null
   );
-  async function signIn(credentials) {
+
+  /**
+   * signIn function requests user from API with credentials as parameters
+   * If credentials are correct sets local storage items
+   *
+   * @param {*} credentials Object {username, password}
+   * @returns Promise
+   */
+
+  const signIn = async (credentials) => {
     const user = await data.getUser("/users", credentials);
     if (user !== null) {
       const { username, password } = credentials;
@@ -24,13 +33,17 @@ export const Provider = ({ children }) => {
       });
     }
     return user;
-  }
+  };
 
-  function signOut() {
+  /**
+   * signOut function updates state and clears local storage
+   */
+
+  const signOut = () => {
     setAuthorizedUser(null);
     setCredentials(null);
     localStorage.clear();
-  }
+  };
 
   useEffect(() => {
     if (localStorage.username && localStorage.password) {

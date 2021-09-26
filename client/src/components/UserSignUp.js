@@ -4,7 +4,7 @@ import { Context } from "../context/Context";
 import useForm from "../utils/useForm";
 
 const UserSignUp = () => {
-  const context = useContext(Context);
+  const { data, actions } = useContext(Context);
   const history = useHistory();
   const { values, handleChange, handleSubmit } = useForm(submit);
   const [err, setErr] = useState([]);
@@ -14,8 +14,14 @@ const UserSignUp = () => {
       ...values,
     };
 
-    context.data
+    data
       .createUser("/users", body)
+      .then(() => {
+        actions.signIn({
+          username: values.emailAddress,
+          password: values.password,
+        });
+      })
       .then(() => {
         history.push("/");
       })

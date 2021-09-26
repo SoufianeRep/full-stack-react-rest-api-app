@@ -9,7 +9,7 @@ export default function CourseDetail() {
   const { id } = useParams();
   const history = useHistory();
   const [course, setCourse] = useState({});
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState(false); // State to manage if the logged in user is the owner of the course to display options(delete or update)
 
   useEffect(() => {
     data
@@ -18,6 +18,7 @@ export default function CourseDetail() {
         if (course) {
           setCourse(course);
           if (course.user.id === parseInt(localStorage.userId)) {
+            //localstorage return string
             setIsOwner(true);
           }
         }

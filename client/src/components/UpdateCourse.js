@@ -1,15 +1,17 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../context/Context";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Redirect } from "react-router-dom";
 import useForm from "../utils/useForm";
 
 export default function UpdateCourse() {
+  const [course, setCourse] = useState({});
+  const [err, setErr] = useState([]);
+  const [isOwner, setIsOwner] = useState(true);
+  const { values, setValues, handleChange, handleSubmit } = useForm(submit);
   const { data, credentials } = useContext(Context);
   const history = useHistory();
   const { id } = useParams();
-  const { values, setValues, handleChange, handleSubmit } = useForm(submit);
-  const [course, setCourse] = useState({});
-  const [err, setErr] = useState([]);
+  const userId = parseInt(localStorage.userId); // logged in user ID parsed to int since local storage returns a string
 
   useEffect(() => {
     data
@@ -17,6 +19,10 @@ export default function UpdateCourse() {
       .then((course) => {
         setValues(course);
         setCourse(course);
+        console.log(course.user.id, parseInt(userId));
+        if (parseInt(userId) !== course.user.id) {
+          setIsOwner(false);
+        }
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -52,7 +58,9 @@ export default function UpdateCourse() {
     history.push(`/courses/${id}`);
   };
 
-  return (
+  return !isOwner ? (
+    <Redirect to="/forbidden" />
+  ) : (
     <div className="wrap">
       <h2>Update Course</h2>
 
