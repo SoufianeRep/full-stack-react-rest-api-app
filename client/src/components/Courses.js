@@ -14,7 +14,10 @@ export default function Courses() {
         setCourses(courses);
       })
       .catch((error) => {
-        if (error.response.status === 404) {
+        const { status } = error.response;
+        if (status === 404) {
+          history.push("/error");
+        } else {
           history.push("/error");
         }
       });

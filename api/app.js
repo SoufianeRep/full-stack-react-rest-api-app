@@ -1,5 +1,4 @@
 'use strict';
-
 // load modules
 const express = require('express');
 const cors = require('cors');
@@ -61,7 +60,7 @@ app.set('port', process.env.PORT || 5000);
     await sequelize.authenticate();
     console.log('Connection has been established successfuly');
   } catch (err) {
-    console.log('Unable to connect to the database: ', error);
+    console.log('Unable to connect to the database: ', err);
   }
 })();
 
